@@ -1,7 +1,7 @@
 import './globals.css';
 import { ReactNode } from 'react';
-import Sidebar from './components/Sidebar';
-import StatusBar from './components/StatusBar';
+import Sidebar from '@/components/Sidebar';
+import StatusBar from '@/components/StatusBar';
 
 export const metadata = {
   title: 'Pokémon To-Do',

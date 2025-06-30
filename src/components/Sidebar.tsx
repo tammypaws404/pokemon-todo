@@ -2,18 +2,18 @@
 
 import { useState } from 'react';
 import {
-  Home,
-  Calendar,
-  Star,
-  Sun,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  ListChecks,
-  Egg,
-  ShoppingCart,
-  BookOpen,
+    Home,
+    Calendar,
+    Star,
+    Sun,
+    Search,
+    ChevronLeft,
+    ChevronRight,
+    Plus,
+    ListChecks,
+    Egg,
+    ShoppingCart,
+    BookOpen,
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -22,7 +22,7 @@ export default function Sidebar() {
     const toggle = () => setOpen(!open);
 
     return (
-        <aside className={`bg-white dark:bg-gray-900 text-black dark:text-white p-3 border-r transition-all duration-300 ${open ? 'w-64' : 'w-16'} min-h-screen`}>
+        <aside className={`bg-gray-50 dark:bg-gray-900 text-black dark:text-white p-3 border-r transition-all duration-300 ${open ? 'w-64' : 'w-16'} min-h-screen`}>
         {/* Collapse button */}
         <div className="flex justify-between items-center mb-4">
             <button onClick={toggle}>
@@ -55,9 +55,9 @@ export default function Sidebar() {
 
         {/* Pokémon section */}
         <nav className="space-y-2 text-sm">
-            <SidebarItem icon={<BookOpen />} label="Pokemon" open={open} />
-            <SidebarItem icon={<Egg />} label="PokeEggs" open={open} />
-            <SidebarItem icon={<ShoppingCart />} label="PokeMart" open={open} />
+            <SidebarItem icon={<BookOpen />} label="Pokémon" open={open} />
+            <SidebarItem icon={<Egg />} label="PokéEggs" open={open} />
+            <SidebarItem icon={<ShoppingCart />} label="PokéMart" open={open} />
         </nav>
 
         {/* Divider */}
@@ -77,7 +77,7 @@ export default function Sidebar() {
 
 function SidebarItem({ icon, label, open }: { icon: React.ReactNode; label: string; open: boolean }) {
     return (
-        <a href="#" className="flex items-center gap-2 px-2 py-1 rounded text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 hover:no-underline transition">
+        <a href="#" className="flex items-center w-full gap-2 px-2 py-2 rounded text-gray-700 dark:text-gray-200 hover:bg-green-300 dark:hover:bg-gray-700 hover:no-underline transition-colors">
         {icon}
         {open && <span>{label}</span>}
         </a>
