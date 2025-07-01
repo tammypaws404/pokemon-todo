@@ -12,6 +12,7 @@ type Task = {
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState('');
+  const [showCompleted, setShowCompleted] = useState(true);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim() !== '') {
@@ -46,12 +47,23 @@ export default function App() {
 
         {completed.length > 0 && (
           <>
-            <div className="text-sm text-gray-500 mb-2">Completed</div>
-            {completed.map(task => (
-              <TaskItem key={task.id} task={task} toggleTask={toggleTask} />
-            ))}
+            <button
+              onClick={() => setShowCompleted(prev => !prev)}
+              className="flex items-center gap-1 text-sm text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300"
+            >
+              <span className="text-xs">
+                {showCompleted ? '▼' : '▲'}
+              </span>
+              <span>Completed ({completed.length})</span>
+            </button>
+
+            {showCompleted &&
+              completed.map(task => (
+                <TaskItem key={task.id} task={task} toggleTask={toggleTask} />
+              ))}
           </>
         )}
+
       </div>
 
       {/* Input Bar */}
