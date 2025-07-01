@@ -2,17 +2,14 @@
 
 import { useState } from 'react';
 import { Check } from 'lucide-react';
-
-type Task = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
+import { Task } from '@/types';
+import TaskSidebar from '@/components/TaskSidebar';
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState('');
   const [showCompleted, setShowCompleted] = useState(true);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim() !== '') {
@@ -42,7 +39,7 @@ export default function App() {
       {/* Task List */}
       <div className="flex-1 overflow-y-auto p-4">
         {uncompleted.map(task => (
-          <TaskItem key={task.id} task={task} toggleTask={toggleTask} />
+          <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
         ))}
 
         {completed.length > 0 && (
@@ -59,7 +56,7 @@ export default function App() {
 
             {showCompleted &&
               completed.map(task => (
-                <TaskItem key={task.id} task={task} toggleTask={toggleTask} />
+                <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
               ))}
           </>
         )}
@@ -77,19 +74,31 @@ export default function App() {
           className="w-full p-3 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
+
+      {/* Right Sidebar */}
+      {selectedTaskId !== null && (
+        <TaskSidebar
+          task={tasks.find(t => t.id === selectedTaskId)!}
+          onClose={() => setSelectedTaskId(null)}
+        />
+      )}
     </div>
   );
 }
 
-function TaskItem({ task, toggleTask }: { task: Task; toggleTask: (id: number) => void }) {
+function TaskItem({ task, toggleTask, onClick }: { task: Task; toggleTask: (id: number) => void; onClick?: () => void }) {
   return (
     <div
+      onClick={onClick}
       className={`flex items-center gap-3 p-3 rounded shadow-sm text-sm mb-2 transition-colors ${
         task.completed ? 'bg-gray-200 dark:bg-blue-950 text-gray-500 line-through' : 'bg-blue-950 text-white'
       }`}
     >
       <button
-        onClick={() => toggleTask(task.id)}
+        onClick={(e) => {
+          e.stopPropagation(); // prevents sidebar from opening when checkbox clicked
+          toggleTask(task.id);
+        }}
         className={`w-5 h-5 flex items-center justify-center border rounded-full transition-colors ${
           task.completed
             ? 'bg-blue-800 border-blue-800 text-white'
