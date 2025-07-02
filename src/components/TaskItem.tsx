@@ -1,7 +1,7 @@
 'use client';
 
-import { Check } from 'lucide-react';
 import { Task } from '@/types';
+import ToggleCompleted from './ToggleCompleted';
 
 type Props = {
   task: Task;
@@ -17,19 +17,7 @@ export default function TaskItem({ task, toggleTask, onClick }: Props) {
         task.completed ? 'bg-gray-200 dark:bg-blue-950 text-gray-500 line-through' : 'bg-blue-950 text-white'
       }`}
     >
-      <button
-        onClick={(e) => {
-          e.stopPropagation(); // prevents sidebar from opening when checkbox clicked
-          toggleTask(task.id);
-        }}
-        className={`w-5 h-5 flex items-center justify-center border rounded-full transition-colors ${
-          task.completed
-            ? 'bg-blue-800 border-blue-800 text-white'
-            : 'border-white'
-        }`}
-      >
-        {task.completed && <Check size={14} />}
-      </button>
+      <ToggleCompleted completed={task.completed} onToggle={() => toggleTask(task.id)} />
       <span>{task.title}</span>
     </div>
   );

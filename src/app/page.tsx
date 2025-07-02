@@ -71,6 +71,7 @@ export default function App() {
           <TaskSidebar
             task={tasks.find(t => t.id === selectedTaskId)!}
             onClose={() => setSelectedTaskId(null)}
+            toggleTask={toggleTask}
           />
         )}
       </div>
