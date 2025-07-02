@@ -40,9 +40,17 @@ export default function App() {
       <StatusBar />
       <div className="flex-1 flex flex-col">
         {/* Task List */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4" onClick={() => setSelectedTaskId(null)}>
           {uncompleted.map(task => (
-            <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              toggleTask={toggleTask}
+              onClick={(e) => {
+                e.stopPropagation(); // prevent parent click
+                setSelectedTaskId(prev => (prev === task.id ? null : task.id));
+              }}
+            />
           ))}
 
           {completed.length > 0 && (
@@ -59,7 +67,7 @@ export default function App() {
 
               {showCompleted &&
                 completed.map(task => (
-                  <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
+                  <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(prev => (prev === task.id ? null : task.id))} />
                 ))}
             </>
           )}
@@ -90,7 +98,7 @@ export default function App() {
   );
 }
 
-function TaskItem({ task, toggleTask, onClick }: { task: Task; toggleTask: (id: number) => void; onClick?: () => void }) {
+function TaskItem({ task, toggleTask, onClick }: { task: Task; toggleTask: (id: number) => void; onClick?: (e: React.MouseEvent<HTMLDivElement>) => void }) {
   return (
     <div
       onClick={onClick}
