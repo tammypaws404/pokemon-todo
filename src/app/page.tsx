@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Check } from 'lucide-react';
 import { Task } from '@/types';
 import TaskSidebar from '@/components/TaskSidebar';
 import StatusBar from '@/components/StatusBar';
+import TaskList from '@/components/TaskList';
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -40,38 +40,18 @@ export default function App() {
       <StatusBar />
       <div className="flex-1 flex flex-col">
         {/* Task List */}
-        <div className="flex-1 overflow-y-auto p-4" onClick={() => setSelectedTaskId(null)}>
-          {uncompleted.map(task => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              toggleTask={toggleTask}
-              onClick={(e) => {
-                e.stopPropagation(); // prevent parent click
-                setSelectedTaskId(prev => (prev === task.id ? null : task.id));
-              }}
-            />
-          ))}
-
-          {completed.length > 0 && (
-            <>
-              <button
-                onClick={() => setShowCompleted(prev => !prev)}
-                className="flex items-center gap-1 text-sm text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300"
-              >
-                <span className="text-xs">
-                  {showCompleted ? '▼' : '▲'}
-                </span>
-                <span>Completed ({completed.length})</span>
-              </button>
-
-              {showCompleted &&
-                completed.map(task => (
-                  <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(prev => (prev === task.id ? null : task.id))} />
-                ))}
-            </>
-          )}
-
+        <div
+          className="flex-1 overflow-y-auto p-4"
+          onClick={() => setSelectedTaskId(null)}
+        >
+          <TaskList
+            tasks={tasks}
+            toggleTask={toggleTask}
+            setSelectedTaskId={setSelectedTaskId}
+            showCompleted={showCompleted}
+            setShowCompleted={setShowCompleted}
+            selectedTaskId={selectedTaskId}
+          />
         </div>
 
         {/* Input Bar */}
@@ -94,32 +74,6 @@ export default function App() {
           />
         )}
       </div>
-    </div>
-  );
-}
-
-function TaskItem({ task, toggleTask, onClick }: { task: Task; toggleTask: (id: number) => void; onClick?: (e: React.MouseEvent<HTMLDivElement>) => void }) {
-  return (
-    <div
-      onClick={onClick}
-      className={`flex items-center gap-3 p-3 rounded shadow-sm text-sm mb-2 transition-colors ${
-        task.completed ? 'bg-gray-200 dark:bg-blue-950 text-gray-500 line-through' : 'bg-blue-950 text-white'
-      }`}
-    >
-      <button
-        onClick={(e) => {
-          e.stopPropagation(); // prevents sidebar from opening when checkbox clicked
-          toggleTask(task.id);
-        }}
-        className={`w-5 h-5 flex items-center justify-center border rounded-full transition-colors ${
-          task.completed
-            ? 'bg-blue-800 border-blue-800 text-white'
-            : 'border-white'
-        }`}
-      >
-        {task.completed && <Check size={14} />}
-      </button>
-      <span>{task.title}</span>
     </div>
   );
 }
