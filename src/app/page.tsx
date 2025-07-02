@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { Task } from '@/types';
 import TaskSidebar from '@/components/TaskSidebar';
+import StatusBar from '@/components/StatusBar';
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -35,53 +36,56 @@ export default function App() {
   const completed = tasks.filter(t => t.completed);
 
   return (
-    <div className="flex flex-col flex-1 h-full">
-      {/* Task List */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {uncompleted.map(task => (
-          <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
-        ))}
+    <div className={`flex-1 flex flex-col h-full transition-all duration-300 ${selectedTaskId !== null ? 'mr-80' : ''}`}>
+      <StatusBar />
+      <div className="flex-1 flex flex-col">
+        {/* Task List */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {uncompleted.map(task => (
+            <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
+          ))}
 
-        {completed.length > 0 && (
-          <>
-            <button
-              onClick={() => setShowCompleted(prev => !prev)}
-              className="flex items-center gap-1 text-sm text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300"
-            >
-              <span className="text-xs">
-                {showCompleted ? '▼' : '▲'}
-              </span>
-              <span>Completed ({completed.length})</span>
-            </button>
+          {completed.length > 0 && (
+            <>
+              <button
+                onClick={() => setShowCompleted(prev => !prev)}
+                className="flex items-center gap-1 text-sm text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <span className="text-xs">
+                  {showCompleted ? '▼' : '▲'}
+                </span>
+                <span>Completed ({completed.length})</span>
+              </button>
 
-            {showCompleted &&
-              completed.map(task => (
-                <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
-              ))}
-          </>
+              {showCompleted &&
+                completed.map(task => (
+                  <TaskItem key={task.id} task={task} toggleTask={toggleTask} onClick={() => setSelectedTaskId(task.id)} />
+                ))}
+            </>
+          )}
+
+        </div>
+
+        {/* Input Bar */}
+        <div className="border-t p-4 bg-white dark:bg-gray-900">
+          <input
+            type="text"
+            placeholder="Add a task"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="w-full p-3 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
+        </div>
+
+        {/* Right Sidebar */}
+        {selectedTaskId !== null && (
+          <TaskSidebar
+            task={tasks.find(t => t.id === selectedTaskId)!}
+            onClose={() => setSelectedTaskId(null)}
+          />
         )}
-
       </div>
-
-      {/* Input Bar */}
-      <div className="border-t p-4 bg-white dark:bg-gray-900">
-        <input
-          type="text"
-          placeholder="Add a task"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-full p-3 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-      </div>
-
-      {/* Right Sidebar */}
-      {selectedTaskId !== null && (
-        <TaskSidebar
-          task={tasks.find(t => t.id === selectedTaskId)!}
-          onClose={() => setSelectedTaskId(null)}
-        />
-      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { Task } from '@/types';
+import { Trash2 } from 'lucide-react';
 
 export default function TaskSidebar({
   task,
@@ -24,7 +25,7 @@ export default function TaskSidebar({
         <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-800 dark:hover:text-white">
           &lt; Back
         </button>
-        <button className="text-red-600 hover:text-red-800 text-sm">🗑 Delete</button>
+        <button className="text-red-600 hover:text-red-800"><Trash2 /></button>
       </div>
     </div>
   );
