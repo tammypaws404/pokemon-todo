@@ -12,7 +12,7 @@ export default function ToggleCompleted ({
   return (
     <button
       onClick={(e) => {
-        e.stopPropagation(); // optional, depending on parent click behavior
+        e.stopPropagation();
         onToggle();
       }}
       className={`w-5 h-5 flex items-center justify-center border rounded-full transition-colors ${

@@ -1,85 +1,109 @@
 'use client';
 
 import { useState } from 'react';
+import { useResizableSidebar } from '@/hooks/useResizableSidebar';
 import {
-    Home,
-    Calendar,
-    Star,
-    Sun,
-    Search,
-    ChevronLeft,
-    ChevronRight,
-    Plus,
-    ListChecks,
-    Egg,
-    ShoppingCart,
-    BookOpen,
+  Home,
+  Calendar,
+  Star,
+  Sun,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  ListChecks,
+  Egg,
+  ShoppingCart,
+  BookOpen,
 } from 'lucide-react';
 
 export default function Sidebar() {
-    const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(true);
+  const { sidebarRef, onMouseDown } = useResizableSidebar();
 
-    const toggle = () => setOpen(!open);
+  const toggle = () => setOpen(!open);
 
-    return (
-        <aside className={`bg-gray-50 dark:bg-gray-900 text-black dark:text-white p-3 border-r transition-all duration-300 ${open ? 'w-64' : 'w-16'} min-h-screen`}>
-        {/* Collapse button */}
-        <div className="flex justify-between items-center mb-4">
-            <button onClick={toggle}>
-            {open ? <ChevronLeft /> : <ChevronRight />}
-            </button>
-        </div>
+  return (
+    <aside
+      ref={sidebarRef}
+      className={`bg-gray-50 dark:bg-gray-900 text-black dark:text-white p-3 border-r transition-all duration-300 min-h-screen relative`}
+      style={{ width: open ? '256px' : '64px' }}
+    >
+      {/* Resize Handle */}
+      <div
+        onMouseDown={onMouseDown}
+        className="absolute top-0 right-0 h-full w-1 cursor-ew-resize z-50"
+      />
 
-        {/* Search Bar */}
-        <div className={`flex items-center bg-gray-100 dark:bg-gray-800 rounded mb-4 p-2 transition-all duration-300 ${open ? 'gap-2' : 'justify-center'}`}>
-            <Search className="w-4 h-4 text-gray-500" />
-            {open && (
-                <input
-                type="text"
-                placeholder="Search"
-                className="bg-transparent outline-none text-sm flex-1"
-                />
-            )}
-        </div>
+      {/* Collapse Button */}
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={toggle}>
+          {open ? <ChevronLeft /> : <ChevronRight />}
+        </button>
+      </div>
 
-        {/* Nav section */}
-        <nav className="space-y-2 text-sm">
-            <SidebarItem icon={<Home />} label="Home" open={open} />
-            <SidebarItem icon={<Sun />} label="My Day" open={open} />
-            <SidebarItem icon={<Star />} label="Starred" open={open} />
-            <SidebarItem icon={<Calendar />} label="Calendar" open={open} />
-        </nav>
+      {/* Search Bar */}
+      <div
+        className={`flex items-center bg-gray-100 dark:bg-gray-800 rounded mb-4 p-2 transition-all duration-300 ${
+          open ? 'gap-2' : 'justify-center'
+        }`}
+      >
+        <Search className="w-4 h-4 text-gray-500" />
+        {open && (
+          <input
+            type="text"
+            placeholder="Search"
+            className="bg-transparent outline-none text-sm flex-1"
+          />
+        )}
+      </div>
 
-        {/* Divider */}
-        <hr className="my-4 border-gray-300 dark:border-gray-700" />
+      {/* Nav section */}
+      <nav className="space-y-2 text-sm">
+        <SidebarItem icon={<Home />} label="Home" open={open} />
+        <SidebarItem icon={<Sun />} label="My Day" open={open} />
+        <SidebarItem icon={<Star />} label="Starred" open={open} />
+        <SidebarItem icon={<Calendar />} label="Calendar" open={open} />
+      </nav>
 
-        {/* Pokémon section */}
-        <nav className="space-y-2 text-sm">
-            <SidebarItem icon={<BookOpen />} label="Pokémon" open={open} />
-            <SidebarItem icon={<Egg />} label="PokéEggs" open={open} />
-            <SidebarItem icon={<ShoppingCart />} label="PokéMart" open={open} />
-        </nav>
+      <hr className="my-4 border-gray-300 dark:border-gray-700" />
 
-        {/* Divider */}
-        <hr className="my-4 border-gray-300 dark:border-gray-700" />
+      {/* Pokémon section */}
+      <nav className="space-y-2 text-sm">
+        <SidebarItem icon={<BookOpen />} label="Pokémon" open={open} />
+        <SidebarItem icon={<Egg />} label="PokéEggs" open={open} />
+        <SidebarItem icon={<ShoppingCart />} label="PokéMart" open={open} />
+      </nav>
 
-        {/* Lists section */}
-        <nav className="space-y-2 text-sm">
-            <SidebarItem icon={<ListChecks />} label="Tasks" open={open} />
-            {/* Replace with dynamic list later */}
-            <SidebarItem icon={<ListChecks />} label="List 1" open={open} />
-            <SidebarItem icon={<ListChecks />} label="List 2" open={open} />
-            <SidebarItem icon={<Plus />} label="Add List" open={open} />
-        </nav>
-        </aside>
-    );
+      <hr className="my-4 border-gray-300 dark:border-gray-700" />
+
+      {/* Lists section */}
+      <nav className="space-y-2 text-sm">
+        <SidebarItem icon={<ListChecks />} label="Tasks" open={open} />
+        <SidebarItem icon={<ListChecks />} label="List 1" open={open} />
+        <SidebarItem icon={<ListChecks />} label="List 2" open={open} />
+        <SidebarItem icon={<Plus />} label="Add List" open={open} />
+      </nav>
+    </aside>
+  );
 }
 
-function SidebarItem({ icon, label, open }: { icon: React.ReactNode; label: string; open: boolean }) {
-    return (
-        <a href="#" className="flex items-center w-full gap-2 px-2 py-2 rounded text-gray-700 dark:text-gray-200 hover:bg-green-300 dark:hover:bg-gray-700 hover:no-underline transition-colors">
-        {icon}
-        {open && <span>{label}</span>}
-        </a>
-    );
+function SidebarItem({
+  icon,
+  label,
+  open,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  open: boolean;
+}) {
+  return (
+    <a
+      href="#"
+      className="flex items-center w-full gap-2 px-2 py-2 rounded text-gray-700 dark:text-gray-200 hover:bg-green-300 dark:hover:bg-gray-700 hover:no-underline transition-colors"
+    >
+      {icon}
+      {open && <span>{label}</span>}
+    </a>
+  );
 }
