@@ -2,6 +2,7 @@
 
 import { Task } from '@/types';
 import { Trash2 } from 'lucide-react';
+import { useEffect } from 'react';
 import ToggleCompleted from './ToggleCompleted';
 import { useResizableSidebar } from '@/hooks/useResizableSidebar';
 
@@ -9,18 +10,24 @@ export default function TaskSidebar({
   task,
   onClose,
   toggleTask,
+  setSidebarWidth
 }: {
   task: Task;
   onClose: () => void;
   toggleTask: (id: number) => void;
+  setSidebarWidth: (w: number) => void;
 }) {
-  const { sidebarRef, onMouseDown } = useResizableSidebar('right');
+  const { sidebarRef, onMouseDown, width } = useResizableSidebar('right');
+
+  useEffect(() => {
+    setSidebarWidth(width);
+  }, [width, setSidebarWidth]);
 
   return (
     <div
       ref={sidebarRef}
-      className="fixed right-0 top-0 h-full bg-white dark:bg-gray-900 border-l p-4 shadow-lg flex flex-col justify-between z-40"
-      style={{ width: '20rem' }}
+      className="fixed right-0 top-0 h-full bg-white dark:bg-gray-900 border-l p-4 shadow-lg flex flex-col justify-between"
+      style={{ width }}
     >
       {/* Resize handle */}
       <div

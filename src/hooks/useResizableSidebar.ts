@@ -1,7 +1,8 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useState } from 'react';
 
 export function useResizableSidebar(direction: 'left' | 'right' = 'left') {
   const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = useState(320); // initial width
 
   const onMouseDown = useCallback((e: MouseEvent | React.MouseEvent) => {
     e.preventDefault();
@@ -14,11 +15,11 @@ export function useResizableSidebar(direction: 'left' | 'right' = 'left') {
 
     const onMouseMove = (e: MouseEvent) => {
       const dx = e.clientX - startX;
-      const newWidth = direction === 'left' 
-        ? startWidth + dx // Left sidebar: drag right to expand
-        : startWidth - dx; // Right sidebar: drag left to expand
+      const newWidth = direction === 'left' ? startWidth + dx : startWidth - dx;
+      const clamped = Math.max(200, Math.min(newWidth, 500));
 
-      sidebar.style.width = `${Math.max(200, Math.min(newWidth, 500))}px`;
+      sidebar.style.width = `${clamped}px`;
+      setWidth(clamped);
     };
 
     const onMouseUp = () => {
@@ -30,5 +31,5 @@ export function useResizableSidebar(direction: 'left' | 'right' = 'left') {
     document.addEventListener('mouseup', onMouseUp);
   }, [direction]);
 
-  return { sidebarRef, onMouseDown };
+  return { sidebarRef, onMouseDown, width };
 }
