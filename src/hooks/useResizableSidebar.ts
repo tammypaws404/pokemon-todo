@@ -2,7 +2,7 @@ import { useRef, useCallback, useState } from 'react';
 
 export function useResizableSidebar(direction: 'left' | 'right' = 'left') {
   const sidebarRef = useRef<HTMLDivElement | null>(null);
-  const [width, setWidth] = useState(320); // initial width
+  const [width, setWidth] = useState(256); // initial width
 
   const onMouseDown = useCallback((e: MouseEvent | React.MouseEvent) => {
     e.preventDefault();

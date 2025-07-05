@@ -38,7 +38,9 @@ export default function App() {
       <div className="flex flex-1 overflow-hidden">
         <div
           className="flex-1 flex flex-col transition-all duration-300"
-          onClick={() => setSelectedTaskId(null)}
+          style={{
+            marginRight: selectedTaskId !== null ? `${taskSidebarWidth}px` : 0,
+          }}
         >
           <StatusBar />
           {/* Task List */}
@@ -68,7 +70,14 @@ export default function App() {
 
         {/* Task Sidebar */}
         {selectedTaskId !== null && (
-          <div style={{ width: taskSidebarWidth, minWidth: 200, maxWidth: 500 }}>
+          <div
+            className="fixed right-0 top-0 h-full z-20 transition-[width] duration-300"
+            style={{
+              width: `${taskSidebarWidth}px`,
+              minWidth: '200px',
+              maxWidth: '500px',
+            }}
+          >
             <TaskSidebar
               task={tasks.find(t => t.id === selectedTaskId)!}
               onClose={() => setSelectedTaskId(null)}
