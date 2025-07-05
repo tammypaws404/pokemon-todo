@@ -36,14 +36,15 @@ export default function App() {
   return (
     <div className="flex-1 flex flex-col h-full">
       <div className="flex flex-1 overflow-hidden">
+        {/* Main Content Area (Task list + input) */}
         <div
           className="flex-1 flex flex-col transition-all duration-300"
           style={{
             marginRight: selectedTaskId !== null ? `${taskSidebarWidth}px` : 0,
           }}
+          onClick={() => setSelectedTaskId(null)} // Close TaskSidebar when empty space clicked
         >
           <StatusBar />
-          {/* Task List */}
           <div className="flex-1 overflow-y-auto p-4">
             <TaskList
               tasks={tasks}
@@ -54,8 +55,6 @@ export default function App() {
               selectedTaskId={selectedTaskId}
             />
           </div>
-
-          {/* Input Bar */}
           <div className="border-t p-4 bg-white dark:bg-gray-900">
             <input
               type="text"
@@ -70,21 +69,12 @@ export default function App() {
 
         {/* Task Sidebar */}
         {selectedTaskId !== null && (
-          <div
-            className="fixed right-0 top-0 h-full z-20 transition-[width] duration-300"
-            style={{
-              width: `${taskSidebarWidth}px`,
-              minWidth: '200px',
-              maxWidth: '500px',
-            }}
-          >
-            <TaskSidebar
-              task={tasks.find(t => t.id === selectedTaskId)!}
-              onClose={() => setSelectedTaskId(null)}
-              toggleTask={toggleTask}
-              setSidebarWidth={setTaskSidebarWidth}
-            />
-          </div>
+          <TaskSidebar
+            task={tasks.find(t => t.id === selectedTaskId)!}
+            onClose={() => setSelectedTaskId(null)}
+            toggleTask={toggleTask}
+            setSidebarWidth={setTaskSidebarWidth}
+          />
         )}
       </div>
     </div>
