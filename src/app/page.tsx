@@ -33,6 +33,10 @@ export default function App() {
     );
   };
 
+  const deleteTask = (id: number) => {
+    setTasks(prev => prev.filter(task => task.id !== id));
+  };  
+
   return (
     <div className="flex-1 flex flex-col h-full">
       <div className="flex flex-1 overflow-hidden">
@@ -73,6 +77,7 @@ export default function App() {
             task={tasks.find(t => t.id === selectedTaskId)!}
             onClose={() => setSelectedTaskId(null)}
             toggleTask={toggleTask}
+            deleteTask={deleteTask}
             setSidebarWidth={setTaskSidebarWidth}
           />
         )}

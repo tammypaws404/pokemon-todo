@@ -11,11 +11,13 @@ export default function TaskSidebar({
   onClose,
   toggleTask,
   setSidebarWidth,
+  deleteTask,
 }: {
   task: Task;
   onClose: () => void;
   toggleTask: (id: number) => void;
   setSidebarWidth: (w: number) => void;
+  deleteTask: (id: number) => void;
 }) {
   const { sidebarRef, onMouseDown, width } = useResizableSidebar('right');
 
@@ -52,7 +54,13 @@ export default function TaskSidebar({
         >
           &lt; Back
         </button>
-        <button className="text-red-600 hover:text-red-800">
+        <button
+          className="text-red-600 hover:text-red-800"
+          onClick={() => {
+              deleteTask(task.id);
+              onClose();
+          }}
+        >
           <Trash2 />
         </button>
       </div>
