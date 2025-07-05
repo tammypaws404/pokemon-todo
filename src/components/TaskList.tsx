@@ -6,6 +6,7 @@ import { Task } from '@/types';
 type TaskListProps = {
   tasks: Task[];
   toggleTask: (id: number) => void;
+  toggleStarred?: (id: number) => void;
   selectedTaskId: number | null;
   setSelectedTaskId: React.Dispatch<React.SetStateAction<number | null>>;
   showCompleted: boolean;
@@ -15,6 +16,7 @@ type TaskListProps = {
 export default function TaskList({
   tasks,
   toggleTask,
+  toggleStarred,
   selectedTaskId,
   setSelectedTaskId,
   showCompleted,
@@ -33,6 +35,7 @@ export default function TaskList({
           key={task.id}
           task={task}
           toggleTask={toggleTask}
+          toggleStarred={toggleStarred}
           onClick={(e) => {
             e.stopPropagation(); // prevent parent click
             setSelectedTaskId(prev => (prev === task.id ? null : task.id));
@@ -59,6 +62,7 @@ export default function TaskList({
                 key={task.id}
                 task={task}
                 toggleTask={toggleTask}
+                toggleStarred={toggleStarred}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedTaskId(prev => (prev === task.id ? null : task.id));

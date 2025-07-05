@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useResizableSidebar } from '@/hooks/useResizableSidebar';
+import Link from 'next/link';
 import {
   Home,
   Calendar,
@@ -60,29 +61,29 @@ export default function Sidebar() {
 
       {/* Nav section */}
       <nav className="space-y-2 text-sm">
-        <SidebarItem icon={<Home />} label="Home" open={open} />
-        <SidebarItem icon={<Sun />} label="My Day" open={open} />
-        <SidebarItem icon={<Star />} label="Starred" open={open} />
-        <SidebarItem icon={<Calendar />} label="Calendar" open={open} />
+        <SidebarItem icon={<Home />} label="Home" open={open} href="/" />
+        <SidebarItem icon={<Sun />} label="My Day" open={open} href="/my-day" />
+        <SidebarItem icon={<Star />} label="Starred" open={open} href="/starred" />
+        <SidebarItem icon={<Calendar />} label="Calendar" open={open} href="/calendar" />
       </nav>
 
       <hr className="my-4 border-gray-300 dark:border-gray-700" />
 
       {/* Pokémon section */}
       <nav className="space-y-2 text-sm">
-        <SidebarItem icon={<BookOpen />} label="Pokémon" open={open} />
-        <SidebarItem icon={<Egg />} label="PokéEggs" open={open} />
-        <SidebarItem icon={<ShoppingCart />} label="PokéMart" open={open} />
+        <SidebarItem icon={<BookOpen />} label="Pokédex" open={open} href="/pokedex" />
+        <SidebarItem icon={<Egg />} label="PokéEggs" open={open} href="/eggs" />
+        <SidebarItem icon={<ShoppingCart />} label="PokéMart" open={open} href="/pokemart" />
       </nav>
 
       <hr className="my-4 border-gray-300 dark:border-gray-700" />
 
       {/* Lists section */}
       <nav className="space-y-2 text-sm">
-        <SidebarItem icon={<ListChecks />} label="Tasks" open={open} />
-        <SidebarItem icon={<ListChecks />} label="List 1" open={open} />
-        <SidebarItem icon={<ListChecks />} label="List 2" open={open} />
-        <SidebarItem icon={<Plus />} label="Add List" open={open} />
+        <SidebarItem icon={<ListChecks />} label="Tasks" open={open} href="/tasks" />
+        <SidebarItem icon={<ListChecks />} label="List 1" open={open} href="/lists/list-1" />
+        <SidebarItem icon={<ListChecks />} label="List 2" open={open} href="/lists/list-2" />
+        <SidebarItem icon={<Plus />} label="Add List" open={open} href="/lists/new" />
       </nav>
     </aside>
   );
@@ -92,18 +93,20 @@ function SidebarItem({
   icon,
   label,
   open,
+  href,
 }: {
   icon: React.ReactNode;
   label: string;
   open: boolean;
+  href: string;
 }) {
   return (
-    <a
-      href="#"
+    <Link
+      href={href}
       className="flex items-center w-full gap-2 px-2 py-2 rounded text-gray-700 dark:text-gray-200 hover:bg-green-300 dark:hover:bg-gray-700 hover:no-underline transition-colors"
     >
       {icon}
       {open && <span>{label}</span>}
-    </a>
+    </Link>
   );
 }
