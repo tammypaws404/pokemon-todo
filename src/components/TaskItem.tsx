@@ -3,6 +3,7 @@
 import { Task } from '@/types';
 import ToggleCompleted from './ToggleCompleted';
 import { Star } from 'lucide-react';
+import ToggleStarred from './ToggleStarred';
 
 type Props = {
   task: Task;
@@ -15,26 +16,23 @@ export default function TaskItem({ task, toggleTask, toggleStarred, onClick }: P
   return (
     <div
       onClick={onClick}
-      className={`flex items-center gap-3 p-3 rounded shadow-sm text-sm mb-2 transition-colors ${
-        task.completed ? 'bg-gray-200 dark:bg-blue-950 text-gray-500 line-through' : 'bg-blue-950 text-white'
+      className={`flex justify-between items-center p-3 rounded shadow-sm text-sm mb-2 transition-colors ${
+        task.completed
+          ? 'bg-gray-200 dark:bg-blue-950 text-gray-500 line-through'
+          : 'bg-blue-950 text-white'
       }`}
     >
-      {/* Complete toggle */}
+      {/* Checkbox + title */}
       <div className="flex items-center gap-3">
         <ToggleCompleted completed={task.completed} onToggle={() => toggleTask(task.id)} />
         <span>{task.title}</span>
       </div>
 
-      {/* Star toggle */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          toggleStarred?.(task.id);
-        }}
-        className="text-yellow-400 hover:text-yellow-300"
-      >
-        <Star fill={task.starred ? 'currentColor' : 'none'} />
-      </button>
+      {/* Star button */}
+      <ToggleStarred
+        starred={task.starred ?? false}
+        onToggle={() => toggleStarred?.(task.id)}
+      />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useResizableSidebar } from '@/hooks/useResizableSidebar';
 import { Task } from '@/types';
 import { Trash2 } from 'lucide-react';
 import ToggleCompleted from './ToggleCompleted';
+import ToggleStarred from './ToggleStarred';
 
 export default function TaskSidebar({
   task,
@@ -12,12 +13,14 @@ export default function TaskSidebar({
   toggleTask,
   setSidebarWidth,
   deleteTask,
+  toggleStarred,
 }: {
   task: Task;
   onClose: () => void;
   toggleTask: (id: number) => void;
   setSidebarWidth: (w: number) => void;
   deleteTask: (id: number) => void;
+  toggleStarred: (id: number) => void;
 }) {
   const { sidebarRef, onMouseDown, width } = useResizableSidebar('right');
 
@@ -32,15 +35,22 @@ export default function TaskSidebar({
       style={{ width }}
     >
       <div>
-        {/* Title */}
-        <div className="flex items-center gap-2 mb-4">
-          <ToggleCompleted
-            completed={task.completed}
-            onToggle={() => toggleTask(task.id)}
+        {/* Checkbox + Title + Star */}
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <div className="flex items-center gap-2 flex-1">
+            <ToggleCompleted
+              completed={task.completed}
+              onToggle={() => toggleTask(task.id)}
+            />
+            <h2 className={`font-semibold ${task.completed ? 'text-gray-500 line-through' : ''}`}>
+              {task.title}
+            </h2>
+          </div>
+
+          <ToggleStarred
+            starred={task.starred ?? false}
+            onToggle={() => toggleStarred?.(task.id)}
           />
-          <h2 className={`font-semibold ${task.completed ? 'text-gray-500 line-through' : ''}`}>
-            {task.title}
-          </h2>
         </div>
 
         {/* Steps */}
