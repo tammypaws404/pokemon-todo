@@ -1,28 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useResizableSidebar } from '@/hooks/useResizableSidebar';
 import Link from 'next/link';
 import {
-  Home,
-  Calendar,
-  Star,
-  Sun,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  ListChecks,
-  Egg,
-  ShoppingCart,
-  BookOpen,
+  Home, Calendar, Star, Sun, Search, ChevronLeft, ChevronRight,
+  Plus, ListChecks, Egg, ShoppingCart, BookOpen, Moon
 } from 'lucide-react';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const { sidebarRef, onMouseDown } = useResizableSidebar();
 
-  const toggle = () => setOpen(!open);
+  const toggleSidebar = () => setOpen(!open);
+
+  useEffect(() => {
+    // On mount, check current theme
+    const isDark = document.documentElement.classList.contains('dark');
+    setDarkMode(isDark);
+  }, []);
+
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    html.classList.toggle('dark');
+    setDarkMode(html.classList.contains('dark'));
+  };
 
   return (
     <aside
@@ -36,11 +39,21 @@ export default function Sidebar() {
         className="absolute top-0 right-0 h-full w-1 cursor-ew-resize z-50"
       />
 
-      {/* Collapse Button */}
+      {/* Collapse Button + Theme Toggle */}
       <div className="flex justify-between items-center mb-4">
-        <button onClick={toggle}>
+        <button onClick={toggleSidebar}>
           {open ? <ChevronLeft /> : <ChevronRight />}
         </button>
+
+        {open && (
+          <button
+            onClick={toggleTheme}
+            className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+            title="Toggle Theme"
+          >
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        )}
       </div>
 
       {/* Search Bar */}
@@ -54,7 +67,7 @@ export default function Sidebar() {
           <input
             type="text"
             placeholder="Search"
-            className="bg-transparent outline-none text-sm flex-1"
+            className="bg-transparent outline-none text-sm flex-1 placeholder-gray-500 dark:placeholder-gray-400"
           />
         )}
       </div>
@@ -109,7 +122,7 @@ function SidebarItem({
     <Link
       href={href}
       className={`flex items-center w-full gap-2 px-2 py-2 rounded transition-colors hover:no-underline
-        ${isActive ? 'bg-green-300 dark:bg-gray-700 font-semibold' : 'text-gray-700 dark:text-gray-200 hover:bg-green-200 dark:hover:bg-gray-700'}
+        ${isActive ? 'bg-gray-200 dark:bg-gray-700 font-semibold' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'}
       `}
     >
       {icon}

@@ -83,7 +83,8 @@ export default function TaskPageView({ tasks, setTasks, title, filter }: Props) 
                   setInput('');
                 }
               }}
-              className="w-full p-3 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 border rounded shadow-sm focus:outline-none focus:ring-2
+              focus:ring-gray-400 placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
 

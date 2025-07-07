@@ -1,4 +1,5 @@
 'use client';
+import { IconPokeball, IconCoins } from '@tabler/icons-react';
 
 export default function StatusBar() {
   return (
@@ -9,11 +10,11 @@ export default function StatusBar() {
       {/* Pokeball + Coin */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1">
-          <img src="/images/pokeball.png" alt="Pokémon" className="w-6 h-6 filter invert brightness-0" />
+          <IconPokeball className="w-6 h-6 text-black dark:text-white" />
           <span>10</span>
         </div>
         <div className="flex items-center gap-1">
-          <img src="/images/coins.png" alt="Coins" className="w-6 h-6 filter invert brightness-0" />
+        <IconCoins className="w-6 h-6 text-black dark:text-white" />
           <span>25</span>
         </div>
       </div>
