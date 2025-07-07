@@ -16,16 +16,26 @@ export default function Sidebar() {
   const toggleSidebar = () => setOpen(!open);
 
   useEffect(() => {
-    // On mount, check current theme
-    const isDark = document.documentElement.classList.contains('dark');
-    setDarkMode(isDark);
+    // On mount, check saved theme in localStorage
+    const storedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldUseDark = storedTheme === 'dark' || (!storedTheme && prefersDark);
+  
+    if (shouldUseDark) {
+      document.documentElement.classList.add('dark');
+      setDarkMode(true);
+    } else {
+      document.documentElement.classList.remove('dark');
+      setDarkMode(false);
+    }
   }, []);
 
   const toggleTheme = () => {
     const html = document.documentElement;
-    html.classList.toggle('dark');
-    setDarkMode(html.classList.contains('dark'));
-  };
+    const isDark = html.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    setDarkMode(isDark);
+  };  
 
   return (
     <aside
