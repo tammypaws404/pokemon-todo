@@ -89,6 +89,8 @@ export default function Sidebar() {
   );
 }
 
+import { usePathname } from 'next/navigation';
+
 function SidebarItem({
   icon,
   label,
@@ -100,10 +102,15 @@ function SidebarItem({
   open: boolean;
   href: string;
 }) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
   return (
     <Link
       href={href}
-      className="flex items-center w-full gap-2 px-2 py-2 rounded text-gray-700 dark:text-gray-200 hover:bg-green-300 dark:hover:bg-gray-700 hover:no-underline transition-colors"
+      className={`flex items-center w-full gap-2 px-2 py-2 rounded transition-colors hover:no-underline
+        ${isActive ? 'bg-green-300 dark:bg-gray-700 font-semibold' : 'text-gray-700 dark:text-gray-200 hover:bg-green-200 dark:hover:bg-gray-700'}
+      `}
     >
       {icon}
       {open && <span>{label}</span>}
