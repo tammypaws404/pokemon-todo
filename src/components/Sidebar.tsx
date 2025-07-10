@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useResizableSidebar } from '@/hooks/useResizableSidebar';
-import Link from 'next/link';
+import SidebarListItem from './SidebarListItem';
+import SidebarItem from './SidebarItem';
 import {
   Home, Calendar, Star, Sun, Search, ChevronLeft, ChevronRight,
-  Plus, ListChecks, Egg, ShoppingCart, BookOpen, Moon
+  Plus, Egg, ShoppingCart, BookOpen, Moon
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -13,6 +14,23 @@ export default function Sidebar() {
   const [darkMode, setDarkMode] = useState(false);
   const { sidebarRef, onMouseDown } = useResizableSidebar();
 
+  const [lists, setLists] = useState([
+    { id: 1, name: 'Tasks' },
+  ]);
+  
+  const addList = () => {
+    const newList = { id: Date.now(), name: 'New List' };
+    setLists(prev => [...prev, newList]);
+  };
+  
+  const handleDeleteList = (id: number) => {
+    setLists(prev => prev.filter(list => list.id !== id));
+  };
+  
+  const handleRenameList = (id: number, newName: string) => {
+    setLists(prev => prev.map(list => list.id === id ? { ...list, name: newName } : list));
+  };
+  
   const toggleSidebar = () => setOpen(!open);
 
   useEffect(() => {
@@ -103,40 +121,25 @@ export default function Sidebar() {
 
       {/* Lists section */}
       <nav className="space-y-2 text-sm">
-        <SidebarItem icon={<ListChecks />} label="Tasks" open={open} href="/tasks" />
-        <SidebarItem icon={<ListChecks />} label="List 1" open={open} href="/lists/list-1" />
-        <SidebarItem icon={<ListChecks />} label="List 2" open={open} href="/lists/list-2" />
-        <SidebarItem icon={<Plus />} label="Add List" open={open} href="/lists/new" />
+        {lists.map(list => (
+          <SidebarListItem
+            key={list.id}
+            list={list}
+            open={open}
+            onDelete={() => handleDeleteList(list.id)}
+            onRename={(newName) => handleRenameList(list.id, newName)}
+            canDelete={list.id !== 1}
+          />
+        ))}
+
+        <button
+          onClick={addList}
+          className="flex items-center w-full gap-2 px-2 py-2 rounded text-gray-700 dark:text-gray-200 hover:bg-green-200 dark:hover:bg-gray-700 transition-colors"
+        >
+          <Plus />
+          {open && <span>Add List</span>}
+        </button>
       </nav>
     </aside>
-  );
-}
-
-import { usePathname } from 'next/navigation';
-
-function SidebarItem({
-  icon,
-  label,
-  open,
-  href,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  open: boolean;
-  href: string;
-}) {
-  const pathname = usePathname();
-  const isActive = pathname === href;
-
-  return (
-    <Link
-      href={href}
-      className={`flex items-center w-full gap-2 px-2 py-2 rounded transition-colors hover:no-underline
-        ${isActive ? 'bg-gray-200 dark:bg-gray-700 font-semibold' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'}
-      `}
-    >
-      {icon}
-      {open && <span>{label}</span>}
-    </Link>
   );
 }
