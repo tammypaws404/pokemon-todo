@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useResizableSidebar } from '@/hooks/useResizableSidebar';
 import SidebarListItem from './SidebarListItem';
 import SidebarItem from './SidebarItem';
+import { useLists } from '@/contexts/ListsContext';
 import {
   Home, Calendar, Star, Sun, Search, ChevronLeft, ChevronRight,
   Plus, Egg, ShoppingCart, BookOpen, Moon
@@ -13,24 +14,7 @@ export default function Sidebar() {
   const [open, setOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
   const { sidebarRef, onMouseDown } = useResizableSidebar();
-
-  const [lists, setLists] = useState([
-    { id: 1, name: 'Tasks' },
-  ]);
-  
-  const addList = () => {
-    const newList = { id: Date.now(), name: 'New List' };
-    setLists(prev => [...prev, newList]);
-  };
-  
-  const handleDeleteList = (id: number) => {
-    setLists(prev => prev.filter(list => list.id !== id));
-  };
-  
-  const handleRenameList = (id: number, newName: string) => {
-    setLists(prev => prev.map(list => list.id === id ? { ...list, name: newName } : list));
-  };
-  
+  const { lists, addList, deleteList, renameList } = useLists();  
   const toggleSidebar = () => setOpen(!open);
 
   useEffect(() => {
@@ -126,8 +110,8 @@ export default function Sidebar() {
             key={list.id}
             list={list}
             open={open}
-            onDelete={() => handleDeleteList(list.id)}
-            onRename={(newName) => handleRenameList(list.id, newName)}
+            onDelete={() => deleteList(list.id)}
+            onRename={(newName) => renameList(list.id, newName)}
             canDelete={list.id !== 1}
           />
         ))}
