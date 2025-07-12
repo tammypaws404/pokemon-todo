@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { ListChecks } from 'lucide-react';
 import SidebarItem from './SidebarItem';
@@ -35,6 +35,24 @@ export default function SidebarListItem({ list, open, onDelete, onRename, renami
     e.preventDefault();
     setShowMenu(true);
   };
+
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Clear context menu by clicking elsewhere
+  useEffect(() => {
+    if (!showMenu) return;
+  
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMenu]);
 
   return (
     <div onContextMenu={handleContextMenu} className="relative group">
@@ -74,8 +92,8 @@ export default function SidebarListItem({ list, open, onDelete, onRename, renami
       {/* Context Menu */}
       {showMenu && open && (
         <div
+          ref={menuRef}
           className="absolute z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md text-sm right-2 mt-1"
-          onMouseLeave={() => setShowMenu(false)}
         >
           <button
             onClick={() => { setShowMenu(false); setRenamingListId(list.id); }}
