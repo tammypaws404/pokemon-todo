@@ -10,27 +10,25 @@ type Props = {
   open: boolean;
   onDelete: () => void;
   onRename: (newName: string) => void;
+  renamingListId: number | null;
+  setRenamingListId: (id: number | null) => void;
   canDelete: boolean;
 };
 
-export default function SidebarListItem({ list, open, onDelete, onRename, canDelete }: Props) {
-  const [isRenaming, setIsRenaming] = useState(false);
+export default function SidebarListItem({ list, open, onDelete, onRename, renamingListId, setRenamingListId, canDelete }: Props) {
   const [name, setName] = useState(list.name);
   const [showMenu, setShowMenu] = useState(false);
   const pathname = usePathname();
   const isActive = pathname === `/lists/${list.id}`;
-
-  const handleDoubleClick = () => {
-    setIsRenaming(true);
-  };
+  const isRenaming = renamingListId === list.id;
 
   const handleRename = () => {
-    setIsRenaming(false);
     if (name.trim() !== '' && name !== list.name) {
       onRename(name.trim());
     } else {
       setName(list.name);
     }
+    setRenamingListId(null);
   };
 
   const handleContextMenu = (e: React.MouseEvent) => {
@@ -53,7 +51,7 @@ export default function SidebarListItem({ list, open, onDelete, onRename, canDel
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleRename();
                 else if (e.key === 'Escape') {
-                  setIsRenaming(false);
+                  setRenamingListId(null);
                   setName(list.name);
                 }
               }}
@@ -63,7 +61,7 @@ export default function SidebarListItem({ list, open, onDelete, onRename, canDel
           )}
         </div>
       ) : (
-        <div onDoubleClick={handleDoubleClick}>
+        <div onDoubleClick={() => setRenamingListId(list.id)}>
           <SidebarItem
             icon={<ListChecks />}
             label={list.name}
@@ -80,13 +78,13 @@ export default function SidebarListItem({ list, open, onDelete, onRename, canDel
           onMouseLeave={() => setShowMenu(false)}
         >
           <button
-            onClick={() => { setShowMenu(false); setIsRenaming(true); }}
+            onClick={() => { setShowMenu(false); setRenamingListId(list.id); }}
             className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
           >
             Rename
           </button>
 
-          {list.id !== 1 && ( // prevent deleting the default Tasks list
+          {canDelete && ( // prevent deleting the default Tasks list
             <button
               onClick={() => { setShowMenu(false); onDelete(); }}
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left text-red-600"

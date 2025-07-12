@@ -7,7 +7,7 @@ type List = { id: number; name: string };
 
 type ListsContextType = {
   lists: List[];
-  addList: () => void;
+  addList: (newList: { id: number; name: string }) => void;
   deleteList: (id: number) => void;
   renameList: (id: number, newName: string) => void;
   tasksByList: { [listId: number]: Task[] };
@@ -50,8 +50,7 @@ export function ListsProvider({ children }: { children: ReactNode }) {
     }
   }, [lists, tasksByList, loading]);
 
-  const addList = () => {
-    const newList = { id: Date.now(), name: 'New List' };
+  const addList = (newList: { id: number; name: string }) => {
     setLists(prev => [...prev, newList]);
     setTasksByList(prev => ({ ...prev, [newList.id]: [] }));
   };

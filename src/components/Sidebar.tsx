@@ -16,6 +16,7 @@ export default function Sidebar() {
   const { sidebarRef, onMouseDown } = useResizableSidebar();
   const { lists, addList, deleteList, renameList } = useLists();  
   const toggleSidebar = () => setOpen(!open);
+  const [renamingListId, setRenamingListId] = useState<number | null>(null);
 
   useEffect(() => {
     // On mount, check saved theme in localStorage
@@ -38,6 +39,12 @@ export default function Sidebar() {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     setDarkMode(isDark);
   };  
+
+  const handleAddList = () => {
+    const newList = { id: Date.now(), name: 'New List' };
+    addList(newList);
+    setRenamingListId(newList.id);
+  };
 
   return (
     <aside
@@ -112,12 +119,14 @@ export default function Sidebar() {
             open={open}
             onDelete={() => deleteList(list.id)}
             onRename={(newName) => renameList(list.id, newName)}
+            renamingListId={renamingListId}
+            setRenamingListId={setRenamingListId}
             canDelete={list.id !== 1}
           />
         ))}
 
         <button
-          onClick={addList}
+          onClick={handleAddList}
           className="flex items-center w-full gap-2 px-2 py-2 rounded text-gray-700 dark:text-gray-200 hover:bg-green-200 dark:hover:bg-gray-700 transition-colors"
         >
           <Plus />
