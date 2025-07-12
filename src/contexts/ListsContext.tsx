@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Task } from '@/types';
 
 type List = { id: number; name: string };
@@ -30,6 +30,34 @@ export function ListsProvider({ children }: { children: ReactNode }) {
   const [tasksByList, setTasksByList] = useState<{ [listId: number]: Task[] }>({
     1: [],
   });
+
+  // On mount, load from localStorage
+  useEffect(() => {
+    const savedLists = localStorage.getItem('lists');
+    const savedTasks = localStorage.getItem('tasksByList');
+
+    if (savedLists) {
+      try {
+        setLists(JSON.parse(savedLists));
+      } catch {}
+    }
+
+    if (savedTasks) {
+      try {
+        setTasksByList(JSON.parse(savedTasks));
+      } catch {}
+    }
+  }, []);
+
+  // Save to localStorage whenever lists change
+  useEffect(() => {
+    localStorage.setItem('lists', JSON.stringify(lists));
+  }, [lists]);
+
+  // Save to localStorage whenever tasksByList changes
+  useEffect(() => {
+    localStorage.setItem('tasksByList', JSON.stringify(tasksByList));
+  }, [tasksByList]);
 
   const addList = () => {
     const newList = { id: Date.now(), name: 'New List' };
