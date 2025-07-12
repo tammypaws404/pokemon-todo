@@ -31,33 +31,24 @@ export function ListsProvider({ children }: { children: ReactNode }) {
     1: [],
   });
 
+  const [loading, setLoading] = useState(true);
+
   // On mount, load from localStorage
   useEffect(() => {
     const savedLists = localStorage.getItem('lists');
     const savedTasks = localStorage.getItem('tasksByList');
-
-    if (savedLists) {
-      try {
-        setLists(JSON.parse(savedLists));
-      } catch {}
-    }
-
-    if (savedTasks) {
-      try {
-        setTasksByList(JSON.parse(savedTasks));
-      } catch {}
-    }
+    if (savedLists) setLists(JSON.parse(savedLists));
+    if (savedTasks) setTasksByList(JSON.parse(savedTasks));
+    setLoading(false);
   }, []);
 
-  // Save to localStorage whenever lists change
+  // Save lists and tasks to localStorage upon change
   useEffect(() => {
-    localStorage.setItem('lists', JSON.stringify(lists));
-  }, [lists]);
-
-  // Save to localStorage whenever tasksByList changes
-  useEffect(() => {
-    localStorage.setItem('tasksByList', JSON.stringify(tasksByList));
-  }, [tasksByList]);
+    if (!loading) {
+      localStorage.setItem('lists', JSON.stringify(lists));
+      localStorage.setItem('tasksByList', JSON.stringify(tasksByList));
+    }
+  }, [lists, tasksByList, loading]);
 
   const addList = () => {
     const newList = { id: Date.now(), name: 'New List' };
@@ -82,6 +73,10 @@ export function ListsProvider({ children }: { children: ReactNode }) {
   const setTasksForList = (listId: number, tasks: Task[]) => {
     setTasksByList(prev => ({ ...prev, [listId]: tasks }));
   };
+
+  if (loading) { // Avoids flash upon reloading
+    return null;
+  }
 
   return (
     <ListsContext.Provider value={{
